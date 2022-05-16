@@ -19,10 +19,23 @@ char Map[10][10] = {
 	{'#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
 	{'#',' ',' ',' ','#',' ',' ',' ',' ','#'},
 	{'#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-	{'#',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+	{'#',' ',' ',' ',' ',' ',' ',' ','G','#'},
 	{'#','#','#','#','#','#','#','#','#','#'}
 };
 
+
+bool IsCollide(const FVector2D& PredictPlayerPosition, FVector2D& OutPlayerPosition)
+{
+	if (Map[PredictPlayerPosition.Y][PredictPlayerPosition.X] == '#')
+	{
+		return false;
+	}
+	else
+	{
+		OutPlayerPosition = PredictPlayerPosition;
+		return true;
+	}
+}
 
 void SetLocation(FVector2D NewLocation);
 
@@ -46,35 +59,37 @@ int main()
 {
 	bool bRunning = true;
 	FVector2D PlayerPosition;
-	PlayerPosition.X = 0;
-	PlayerPosition.Y = 0;
+	PlayerPosition.X = 1;
+	PlayerPosition.Y = 1;
 
 	srand(static_cast<unsigned int>(time(nullptr)));
-	FVector2D StartPosition;
-	StartPosition.X = rand() % 10 + 1;
-	StartPosition.Y = rand() % 10 + 1;
+	FVector2D StartPosition = { 0, 0 };
+	//StartPosition.X = rand() % 10 + 1;
+	//StartPosition.Y = rand() % 10 + 1;
 
 	while (bRunning)
 	{
 		int KeyCode = _getch();
 
+		FVector2D PredictPlayerPosition = PlayerPosition;
+
 		switch (KeyCode)
 		{
 		case 'w':
 		case 'W':
-			PlayerPosition.Y--;
+			PredictPlayerPosition.Y--;
 			break;
 		case 's':
 		case 'S':
-			PlayerPosition.Y++;
+			PredictPlayerPosition.Y++;
 			break;
 		case 'a':
 		case 'A':
-			PlayerPosition.X--;
+			PredictPlayerPosition.X--;
 			break;
 		case 'd':
 		case 'D':
-			PlayerPosition.X++;
+			PredictPlayerPosition.X++;
 			break;
 		case 27:
 			bRunning = false;
@@ -82,10 +97,13 @@ int main()
 
 		}
 
-		PlayerPosition.X = PlayerPosition.X < 1 ? 1 : PlayerPosition.X;
-		PlayerPosition.Y = PlayerPosition.Y < 1 ? 1 : PlayerPosition.Y;
-		PlayerPosition.X = PlayerPosition.X >= 9 ? 8 : PlayerPosition.X;
-		PlayerPosition.Y = PlayerPosition.Y >= 9 ? 8 : PlayerPosition.Y;
+		IsCollide(PredictPlayerPosition, PlayerPosition);
+
+
+		//PlayerPosition.X = PlayerPosition.X < 1 ? 1 : PlayerPosition.X;
+		//PlayerPosition.Y = PlayerPosition.Y < 1 ? 1 : PlayerPosition.Y;
+		//PlayerPosition.X = PlayerPosition.X >= 9 ? 8 : PlayerPosition.X;
+		//PlayerPosition.Y = PlayerPosition.Y >= 9 ? 8 : PlayerPosition.Y;
 
 		system("cls");
 
